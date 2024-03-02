@@ -1,0 +1,13 @@
+[01/12/2024 15:28:42] {train_reader.py:244} INFO - device type: NVIDIA GeForce RTX 2080 Ti, memory: 10.76116943359375G
+[01/12/2024 15:29:20] {train_reader.py:244} INFO - device type: NVIDIA GeForce RTX 2080 Ti, memory: 10.76116943359375G
+[01/12/2024 15:29:32] {train_reader.py:264} INFO - load the tokenizer from codet5
+[01/12/2024 15:29:33] {train_reader.py:293} INFO - init a model from T5
+[01/12/2024 15:30:00] {train_reader.py:346} INFO - Start training
+[01/12/2024 15:38:03] {train_reader.py:244} INFO - device type: NVIDIA GeForce RTX 2080 Ti, memory: 10.76116943359375G
+[01/12/2024 15:38:10] {train_reader.py:264} INFO - load the tokenizer from codet5
+[01/12/2024 15:38:11] {train_reader.py:293} INFO - init a model from T5
+[01/12/2024 15:38:40] {train_reader.py:346} INFO - Start training
+[01/12/2024 15:52:01] {train_reader.py:244} INFO - device type: NVIDIA GeForce RTX 2080 Ti, memory: 10.76116943359375G
+[01/12/2024 15:52:08] {train_reader.py:264} INFO - load the tokenizer from codet5
+[01/12/2024 15:52:08] {train_reader.py:293} INFO - init a model from T5
+[01/12/2024 15:52:36] {train_reader.py:346} INFO - Start training

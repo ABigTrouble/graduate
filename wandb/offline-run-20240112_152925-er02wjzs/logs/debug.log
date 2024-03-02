@@ -1,0 +1,27 @@
+2024-01-12 15:29:25,207 INFO    MainThread:6482 [wandb_setup.py:_flush():76] Current SDK version is 0.16.2
+2024-01-12 15:29:25,207 INFO    MainThread:6482 [wandb_setup.py:_flush():76] Configure stats pid to 6482
+2024-01-12 15:29:25,207 INFO    MainThread:6482 [wandb_setup.py:_flush():76] Loading settings from /home/cike/.config/wandb/settings
+2024-01-12 15:29:25,208 INFO    MainThread:6482 [wandb_setup.py:_flush():76] Loading settings from /home/cike/project/docprompt/docprompt/wandb/settings
+2024-01-12 15:29:25,208 INFO    MainThread:6482 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-01-12 15:29:25,208 INFO    MainThread:6482 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-01-12 15:29:25,208 INFO    MainThread:6482 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'generator/fid/train_reader.py', 'program_abspath': '/home/cike/project/docprompt/docprompt/generator/fid/train_reader.py', 'program': '/home/cike/project/docprompt/docprompt/generator/fid/train_reader.py'}
+2024-01-12 15:29:25,209 INFO    MainThread:6482 [wandb_setup.py:_flush():76] Applying login settings: {'mode': 'offline'}
+2024-01-12 15:29:25,209 INFO    MainThread:6482 [wandb_init.py:_log_setup():526] Logging user logs to /home/cike/project/docprompt/docprompt/wandb/offline-run-20240112_152925-er02wjzs/logs/debug.log
+2024-01-12 15:29:25,210 INFO    MainThread:6482 [wandb_init.py:_log_setup():527] Logging internal logs to /home/cike/project/docprompt/docprompt/wandb/offline-run-20240112_152925-er02wjzs/logs/debug-internal.log
+2024-01-12 15:29:25,210 INFO    MainThread:6482 [wandb_init.py:init():566] calling init triggers
+2024-01-12 15:29:25,210 INFO    MainThread:6482 [wandb_init.py:init():573] wandb.init called with sweep_config: {}
+config: {}
+2024-01-12 15:29:25,210 INFO    MainThread:6482 [wandb_init.py:init():616] starting backend
+2024-01-12 15:29:25,211 INFO    MainThread:6482 [wandb_init.py:init():620] setting up manager
+2024-01-12 15:29:25,213 INFO    MainThread:6482 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2024-01-12 15:29:25,217 INFO    MainThread:6482 [wandb_init.py:init():628] backend started and connected
+2024-01-12 15:29:25,221 INFO    MainThread:6482 [wandb_init.py:init():720] updated telemetry
+2024-01-12 15:29:25,236 INFO    MainThread:6482 [wandb_init.py:init():753] communicating run to backend with 90.0 second timeout
+2024-01-12 15:29:25,290 INFO    MainThread:6482 [wandb_init.py:init():804] starting run threads in backend
+2024-01-12 15:29:32,798 INFO    MainThread:6482 [wandb_run.py:_console_start():2233] atexit reg
+2024-01-12 15:29:32,798 INFO    MainThread:6482 [wandb_run.py:_redirect():2088] redirect: wrap_raw
+2024-01-12 15:29:32,798 INFO    MainThread:6482 [wandb_run.py:_redirect():2153] Wrapping output streams.
+2024-01-12 15:29:32,798 INFO    MainThread:6482 [wandb_run.py:_redirect():2178] Redirects installed.
+2024-01-12 15:29:32,798 INFO    MainThread:6482 [wandb_init.py:init():847] run started, returning control to user process
+2024-01-12 15:29:32,800 INFO    MainThread:6482 [wandb_run.py:_config_callback():1342] config_cb None None {'name': 'experiment_name', 'checkpoint_dir': './checkpoint/', 'model_path': 'none', 'continue_from_checkpoint': False, 'per_gpu_batch_size': 1, 'maxload': -1, 'local_rank': 0, 'main_port': -1, 'seed': 1996, 'eval_freq': 500, 'save_freq': 5000, 'eval_print_freq': 1000, 'eval_metric': 'bleu', 'train_data': 'data/conala/fid.cmd_train.codet5.t10.json', 'eval_data': 'data/conala/fid.cmd_dev.codet5.t10.json', 'model_size': 'base', 'model_name': 'models/generator/codet5-base', 'use_checkpoint': False, 'text_maxlength': 200, 'answer_maxlength': -1, 'no_title': False, 'n_context': 1, 'encoder_weights': None, 'dataset': 'conala', 'warmup_steps': 1000, 'total_steps': 10000, 'scheduler_steps': None, 'accumulation_steps': 1, 'dropout': 0.1, 'lr': 5e-05, 'clip': 1.0, 'optim': 'adamw', 'scheduler': 'linear', 'weight_decay': 0.01, 'fixed_lr': False, 'is_slurm_job': False, 'n_nodes': 1, 'node_id': 0, 'global_rank': 0, 'world_size': 6, 'n_gpu_per_node': 6, 'is_distributed': False, 'is_main': True, 'multi_node': False, 'multi_gpu': True, 'device': 'cuda', 'checkpoint_path': 'checkpoint/experiment_name'}
+2024-01-12 15:30:04,599 WARNING MsgRouterThr:6482 [router.py:message_loop():77] message_loop has been closed

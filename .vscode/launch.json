@@ -1,0 +1,61 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: 当前文件",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--num_layers",
+                "12",
+                "--model_name_or_path",
+                "./Salesforce/codet5-base",
+                "--sim_func",
+                "cls_distance.cosine",
+                "--temp",
+                "0.05 ",
+                "--train_file",
+                "data/conala/train_retriever_sup_unsup.json",
+                "--eval_file",
+                "data/conala/dev_retriever.json",
+                "--output_dir",
+                "models/retriever/docprompting_codet5_python_doc_retriever",
+                "--eval_src_file",
+                "data/conala/conala_nl.txt",
+                "--eval_tgt_file",
+                "data/conala/python_manual_firstpara.tok.txt",
+                "--eval_root_folder",
+                "data/conala",
+                "--eval_oracle_file",
+                "data/conala/cmd_dev.oracle_man.full.json",
+                "--run_name",
+                "docprompting_codet5_python_doc_retriever",
+                "--num_train_epochs",
+                "10",
+                "--per_device_train_batch_size",
+                "16",
+                "--learning_rate",
+                "1e-5",
+                "--max_seq_length",
+                "32",
+                "--evaluation_strategy",
+                "steps",
+                "--metric_for_best_model",
+                "recall@10",
+                "--load_best_model_at_end",
+                "--eval_steps",
+                "125",
+                "--overwrite_output_dir",
+                "--do_train",
+                "--eval_form",
+                "retrieval"
+            ]
+        }
+    ]
+}

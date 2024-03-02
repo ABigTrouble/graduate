@@ -1,0 +1,157 @@
+{
+    "os": "Linux-4.15.0-213-generic-x86_64-with-glibc2.27",
+    "python": "3.9.18",
+    "heartbeatAt": "2024-01-12T15:29:25.491801",
+    "startedAt": "2024-01-12T15:29:25.200382",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--seed",
+        "1996",
+        "--train_data",
+        "data/conala/fid.cmd_train.codet5.t10.json",
+        "--eval_data",
+        "data/conala/fid.cmd_dev.codet5.t10.json",
+        "--model_name",
+        "models/generator/codet5-base"
+    ],
+    "state": "running",
+    "program": "/home/cike/project/docprompt/docprompt/generator/fid/train_reader.py",
+    "codePathLocal": "generator/fid/train_reader.py",
+    "codePath": "generator/fid/train_reader.py",
+    "git": {
+        "remote": "https://github.com/shuyanzhou/docprompting.git",
+        "commit": "b7e0e626d47a0649090465bb15c91192fee8777f"
+    },
+    "email": "unknown",
+    "root": "/home/cike/project/docprompt/docprompt",
+    "host": "48b1e6ab2c51",
+    "username": "cike",
+    "executable": "/home/cike/anaconda3/envs/docprompt/bin/python",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 3599.888,
+        "min": 1200.0,
+        "max": 3700.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3599.889,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.888,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.89,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.889,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.887,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.889,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.888,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.933,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.887,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.888,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.888,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.887,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.89,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.89,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.889,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3599.889,
+            "min": 1200.0,
+            "max": 3700.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 11086.68595123291,
+            "used": 9528.664669036865
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 2080 Ti",
+    "gpu_count": 6,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 2080 Ti",
+            "memory_total": 11554717696
+        },
+        {
+            "name": "NVIDIA GeForce RTX 2080 Ti",
+            "memory_total": 11554717696
+        },
+        {
+            "name": "NVIDIA GeForce RTX 2080 Ti",
+            "memory_total": 11554717696
+        },
+        {
+            "name": "NVIDIA GeForce RTX 2080 Ti",
+            "memory_total": 11554717696
+        },
+        {
+            "name": "NVIDIA GeForce RTX 2080 Ti",
+            "memory_total": 11554717696
+        },
+        {
+            "name": "NVIDIA GeForce RTX 2080 Ti",
+            "memory_total": 11554717696
+        }
+    ],
+    "memory": {
+        "total": 251.79150009155273
+    }
+}

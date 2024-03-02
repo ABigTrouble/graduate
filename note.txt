@@ -1,0 +1,1 @@
+* train_retriever_sup_unsup.json 包含的监督数据是conala的（nlp，doc）的pairs，而无监督数据是对nlp文本的重复，目的是进行无监督学习，让dropout自动生成正样本来学习，类似与bert中文档挖空预测
