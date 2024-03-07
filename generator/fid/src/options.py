@@ -45,6 +45,9 @@ class Options():
 
     def add_reader_options(self):
         self.parser.add_argument('--train_data', type=str, default='none', help='path of train data')
+        self.parser.add_argument('--lang', type=str, default='python', help='language of input data')
+        self.parser.add_argument('--code_length', type=int, default='256', help='language of input data')
+        self.parser.add_argument('--data_flow_length', type=int, default='64', help='language of input data')
         self.parser.add_argument('--eval_data', type=str, default='none', help='path of eval data')
         self.parser.add_argument('--model_size', type=str, default='base')
         self.parser.add_argument('--model_name', type=str, default='t5-base')

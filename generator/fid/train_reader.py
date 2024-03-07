@@ -7,6 +7,7 @@ import json
 import os
 import time
 import sys
+
 sys.path.append('.')
 import torch
 import transformers
@@ -26,14 +27,15 @@ import src.data
 import src.model
 import wandb
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 device = torch.device("cuda:0")
-os.environ['WANDB_DISABLED'] = '1'
-WANDB_DISABLED= os.environ['WANDB_DISABLED'] if 'WANDB_DISABLED' in os.environ else False
+# os.environ['WANDB_DISABLED'] = '1'
+os.environ["WANDB_MODE"] = "online"
+WANDB_DISABLED = os.environ['WANDB_DISABLED'] if 'WANDB_DISABLED' in os.environ else False
 TQDM_DISABLED = os.environ['TQDM_DISABLED'] if 'TQDM_DISABLED' in os.environ else False
 
-def train(model, optimizer, scheduler, step, train_dataset, eval_dataset, opt, collator, best_dev_em, checkpoint_path):
 
+def train(model, optimizer, scheduler, step, train_dataset, eval_dataset, opt, collator, best_dev_em, checkpoint_path):
     # if opt.is_main:
     #     try:
     #         tb_logger = torch.utils.tensorboard.SummaryWriter(Path(opt.checkpoint_dir)/opt.name)
@@ -41,7 +43,7 @@ def train(model, optimizer, scheduler, step, train_dataset, eval_dataset, opt, c
     #         tb_logger = None
     #         logger.warning('Tensorboard is not available.')
 
-    torch.manual_seed(opt.global_rank + opt.seed) #different seed for different sampling depending on global_rank
+    torch.manual_seed(opt.global_rank + opt.seed)  # different seed for different sampling depending on global_rank
     train_sampler = RandomSampler(train_dataset)
     train_dataloader = DataLoader(
         train_dataset,
@@ -61,12 +63,13 @@ def train(model, optimizer, scheduler, step, train_dataset, eval_dataset, opt, c
         for i, batch in enumerate(tqdm(train_dataloader, disable=TQDM_DISABLED)):
             step += 1
             opt._train_step = step
-            (idx, labels, _, context_ids, context_mask) = batch
+            (idx, labels, decoder_mask, context_ids, context_mask) = batch
 
             train_loss = model(
                 input_ids=context_ids.cuda(),
                 attention_mask=context_mask.cuda(),
-                labels=labels.cuda()
+                labels=labels.cuda(),
+                decoder_attention_mask=decoder_mask.cuda()
             )[0]
 
             train_loss.backward()
@@ -92,7 +95,7 @@ def train(model, optimizer, scheduler, step, train_dataset, eval_dataset, opt, c
                         src.util.save(model, optimizer, scheduler, step, best_dev_em,
                                       opt, checkpoint_path, 'best_dev')
                     log = f"{step} / {opt.total_steps} |"
-                    log += f"train: {curr_loss/opt.eval_freq:.3f} |"
+                    log += f"train: {curr_loss / opt.eval_freq:.3f} |"
                     log += f"evaluation {opt.eval_metric}: {dev_em:.02f}|"
                     log += f"lr: {scheduler.get_last_lr()[0]:.5f}"
                     logger.info(log)
@@ -101,7 +104,6 @@ def train(model, optimizer, scheduler, step, train_dataset, eval_dataset, opt, c
                     #     tb_logger.add_scalar("Training", curr_loss / (opt.eval_freq), step)
                     curr_loss = 0.
 
-
             if opt.is_main and step % opt.save_freq == 0:
                 src.util.save(model, optimizer, scheduler, step, best_dev_em,
                               opt, checkpoint_path, f"step-{step}")
@@ -109,15 +111,16 @@ def train(model, optimizer, scheduler, step, train_dataset, eval_dataset, opt, c
             if step > opt.total_steps:
                 break
 
+
 def evaluate_em(model, dataset, tokenizer, collator, opt):
     sampler = SequentialSampler(dataset)
     dataloader = DataLoader(dataset,
-        sampler=sampler,
-        batch_size=opt.per_gpu_batch_size,
-        drop_last=False,
-        num_workers=10,
-        collate_fn=collator
-    )
+                            sampler=sampler,
+                            batch_size=opt.per_gpu_batch_size,
+                            drop_last=False,
+                            num_workers=10,
+                            collate_fn=collator
+                            )
     model.eval()
     total = 0
     exactmatch = []
@@ -142,16 +145,17 @@ def evaluate_em(model, dataset, tokenizer, collator, opt):
     exactmatch, total = src.util.weighted_average(np.mean(exactmatch), total, opt)
     return exactmatch
 
+
 def evaluate_customized(model, dataset, tokenizer, collator, opt, result_file=None, is_bleu=False, is_token_f1=False):
     assert is_bleu != is_token_f1
     sampler = SequentialSampler(dataset)
     dataloader = DataLoader(dataset,
-        sampler=sampler,
-        batch_size=opt.per_gpu_batch_size,
-        drop_last=False,
-        num_workers=10,
-        collate_fn=collator
-    )
+                            sampler=sampler,
+                            batch_size=opt.per_gpu_batch_size,
+                            drop_last=False,
+                            num_workers=10,
+                            collate_fn=collator
+                            )
     model.eval()
     model = model.module if hasattr(model, "module") else model
 
@@ -160,7 +164,8 @@ def evaluate_customized(model, dataset, tokenizer, collator, opt, result_file=No
         result_file = f"{opt.checkpoint_path}/dev_result_{opt._train_step}.json" if result_file is None else result_file
         result_d = []
 
-        with open(f"{opt.checkpoint_path}/gold.gold", "w+") as fg, open(f'{opt.checkpoint_path}/pred.pred', 'w+') as fp, open(result_file, 'w+') as fr:
+        with open(f"{opt.checkpoint_path}/gold.gold", "w+") as fg, open(f'{opt.checkpoint_path}/pred.pred',
+                                                                        'w+') as fp, open(result_file, 'w+') as fr:
 
             for i, batch in enumerate(tqdm(dataloader, disable=TQDM_DISABLED)):
                 (idx, _, _, context_ids, context_mask) = batch
@@ -174,7 +179,8 @@ def evaluate_customized(model, dataset, tokenizer, collator, opt, result_file=No
                 for k, o in enumerate(outputs):
                     ans = tokenizer.decode(o, skip_special_tokens=False, clean_up_tokenization_spaces=False)
                     gold = dataset.get_example(idx[k])['target']
-                    ans = ans.replace("{{", " {{").replace("\n", ' ').replace("\r", "").replace("<pad>", "").replace("<s>", "").replace("</s>", "").strip()
+                    ans = ans.replace("{{", " {{").replace("\n", ' ').replace("\r", "").replace("<pad>", "").replace(
+                        "<s>", "").replace("</s>", "").strip()
                     ans = " ".join(ans.split())
                     gold = gold.replace("\n", ' ')
                     fg.write(f"{gold}\n")
@@ -183,8 +189,6 @@ def evaluate_customized(model, dataset, tokenizer, collator, opt, result_file=No
                     result_d.append(cur_result)
 
             json.dump(result_d, fr, indent=2)
-
-
 
         if is_bleu:
             score = conala_bleu(
@@ -202,6 +206,7 @@ def evaluate_customized(model, dataset, tokenizer, collator, opt, result_file=No
 
     return score
 
+
 def evaluate(model, dataset, tokenizer, collator, opt):
     if opt.eval_metric == 'exact_match':
         x = evaluate_em(model, dataset, tokenizer, collator, opt)
@@ -216,27 +221,28 @@ def evaluate(model, dataset, tokenizer, collator, opt):
     print(json.dumps(metric, indent=2))
     return metric
 
+
 if __name__ == "__main__":
     options = Options()
     options.add_reader_options()
     options.add_optim_options()
     opt = options.parse()
 
-    #opt = options.get_options(use_reader=True, use_optim=True)
+    # opt = options.get_options(use_reader=True, use_optim=True)
 
     torch.manual_seed(opt.seed)
     src.slurm.init_distributed_mode(opt)
     src.slurm.init_signal_handler()
 
-    checkpoint_path = Path(opt.checkpoint_dir)/opt.name
+    checkpoint_path = Path(opt.checkpoint_dir) / opt.name
     checkpoint_exists = checkpoint_path.exists()
     if opt.is_distributed:
         torch.distributed.barrier()  # Pytorch在分布式训练过程中，对于数据的读取是采用主进程预读取并缓存，然后其它进程从缓存中读取，不同进程之间的同步通信需要通过torch.distributed.barrier()实现
     checkpoint_path.mkdir(parents=True, exist_ok=True)
     opt.checkpoint_path = checkpoint_path
-    #if not checkpoint_exists and opt.is_main:
+    # if not checkpoint_exists and opt.is_main:
     #    options.print_options(opt)
-    #checkpoint_path, checkpoint_exists = util.get_checkpoint_path(opt)
+    # checkpoint_path, checkpoint_exists = util.get_checkpoint_path(opt)
 
     logger = src.util.init_logger(
         opt.is_main,
@@ -244,13 +250,17 @@ if __name__ == "__main__":
         checkpoint_path / 'run.log'
     )
 
-    logger.info(f"device type: {torch.cuda.get_device_name(0)}, memory: {torch.cuda.get_device_properties(0).total_memory / 1024 / 1024 / 1024}G")
+    logger.info(
+        f"device type: {torch.cuda.get_device_name(0)}, memory: {torch.cuda.get_device_properties(0).total_memory / 1024 / 1024 / 1024}G")
 
     # logger.info(json.dumps(vars(opt), indent=2))
 
-    if WANDB_DISABLED:
+    if not WANDB_DISABLED:
+        wandb.login(key='6accd7036f132ff7ae814a7b0889b1ccb0065dcb')
         # wandb.init(mode='disabled')
-        wandb.init()
+        wandb.init(project="docprompt",  # 大框架是什么，最高一级
+                   name="v1",
+                   notes="v1")  # 一般是简单描述这次train你动了哪些部分，比如网络加了注意力机制等等)
     else:
         if opt.is_main:
             # is the master
@@ -263,7 +273,7 @@ if __name__ == "__main__":
     model_name = opt.model_name
     model_class = src.model.FiDT5
 
-    #load data
+    # load data
     if 'codet5' in model_name or 'code_t5' in model_name:
         logger.info(f'load the tokenizer from codet5')
         tokenizer = transformers.RobertaTokenizer.from_pretrained(model_name)
@@ -275,23 +285,23 @@ if __name__ == "__main__":
         special_tokens_dict = {'additional_special_tokens': ['{{', '}}']}
         num_added_toks = tokenizer.add_special_tokens(special_tokens_dict)
 
-    collator = src.data.Collator(opt.text_maxlength, tokenizer,
+    collator = src.data.Collator(opt.text_maxlength, tokenizer, opt.code_length,
                                  answer_maxlength=opt.answer_maxlength)
 
     # use golbal rank and world size to split the eval set on multiple gpus
     train_examples = src.data.load_data(
-        opt.train_data, 
-        global_rank=opt.global_rank, 
+        opt.train_data,
+        global_rank=opt.global_rank,
         world_size=opt.world_size,
     )  # load数据，并在数据的ctxs中添加c['score'] = 1.0 / (k + 1)
-    train_dataset = src.data.Dataset(train_examples, opt.n_context)
+    train_dataset = src.data.Dataset(train_examples, tokenizer, opt, opt.n_context, is_train=True)
     # use golbal rank and world size to split the eval set on multiple gpus
     eval_examples = src.data.load_data(
         opt.eval_data,
         global_rank=opt.global_rank,
         world_size=opt.world_size,
     )
-    eval_dataset = src.data.Dataset(eval_examples, opt.n_context)
+    eval_dataset = src.data.Dataset(eval_examples, tokenizer, opt, opt.n_context)
 
     if not opt.continue_from_checkpoint:
         logger.info("init a model from T5")
@@ -332,7 +342,7 @@ if __name__ == "__main__":
         model, optimizer, scheduler, opt_checkpoint, step, best_dev_em = \
             src.util.load(model_class, load_path, opt, reset_params=False)
         logger.info(f"Model loaded from checkpoint {load_path}")
-    else: # load from model path
+    else:  # load from model path
         model, optimizer, scheduler, opt_checkpoint, step, best_dev_em = \
             src.util.load(model_class, opt.model_path, opt, reset_params=True)
         logger.info(f"Model loaded from a model {opt.model_path}")

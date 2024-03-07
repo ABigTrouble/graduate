@@ -49,6 +49,7 @@ class FiDT5(transformers.T5ForConditionalGeneration):
             input_ids=input_ids,
             attention_mask=attention_mask,
             # return_dict=False,
+            # TODO 显示给模型传递decoder_mask
             **kwargs
         )
 
