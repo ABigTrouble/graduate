@@ -29,8 +29,7 @@ import wandb
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 device = torch.device("cuda:0")
-# os.environ['WANDB_DISABLED'] = '1'
-os.environ["WANDB_MODE"] = "online"
+os.environ['WANDB_DISABLED'] = '1'
 WANDB_DISABLED = os.environ['WANDB_DISABLED'] if 'WANDB_DISABLED' in os.environ else False
 TQDM_DISABLED = os.environ['TQDM_DISABLED'] if 'TQDM_DISABLED' in os.environ else False
 
@@ -255,12 +254,8 @@ if __name__ == "__main__":
 
     # logger.info(json.dumps(vars(opt), indent=2))
 
-    if not WANDB_DISABLED:
-        wandb.login(key='6accd7036f132ff7ae814a7b0889b1ccb0065dcb')
-        # wandb.init(mode='disabled')
-        wandb.init(project="docprompt",  # 大框架是什么，最高一级
-                   name="v1",
-                   notes="v1")  # 一般是简单描述这次train你动了哪些部分，比如网络加了注意力机制等等)
+    if WANDB_DISABLED:
+        wandb.init()
     else:
         if opt.is_main:
             # is the master
